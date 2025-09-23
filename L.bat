@@ -1,3 +1,3 @@
-cd C:\Users\Guest\kiosk
+
 start autohotkey/AutoHotkey library.ahk
 exit
