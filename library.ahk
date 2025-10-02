@@ -16,7 +16,7 @@
 #SingleInstance Force
 #Warn
 
-run taskkill /IM chrome.exe
+run taskkill /F /IMhe chrome.exe
 
 RegExMatch(A_OSVersion, "(\d+)\.(\d+)\.(\d+)", Ver)
 if (Ver1 = 10) and (Ver3>=22000) {
@@ -25,15 +25,16 @@ if (Ver1 = 10) and (Ver3>=22000) {
 }	
 else if (Ver1 = 10) {
 	;MsgBox  Windows 10
-	run, "C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk https://www.librarything.com/catalog/HolmstadLibrary
+	run, "C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk  https://www.librarything.com/catalog/HolmstadLibrary
 }	
 else {
 	;MsgBox  Windows ver
 	run, "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --kiosk https://www.librarything.com/catalog/HolmstadLibrary
 }
 
-enable_mouse := True
-toggle := 0
+
+;enable_mouse := True
+;toggle := 0
 
 xWidth = % A_ScreenWidth
 yHeight = 52
@@ -48,17 +49,12 @@ btn3_x := A_ScreenWidth - btn3_w
 txt2_x = 100
 txt2_w := xWidth - txt2_x - btn3_w
 
-
-TransColor =  634644
-Gui, Main: Color, %transColor%
 Gui, Main: Margin, 0, 0
 Gui, Main: -DPIScale			; make display match pixels
-; https://www.reddit.com/r/AutoHotkey/comments/vnvy3z/gui_left_click_image_to_launch_programwebsite/
 
-
-Gui, Main: Font, s24
-Gui, Main: add, button, gleftArror  x%btn1_x% y0 w%btn_w% h%yHeight%, 🠔 
-Gui, Main: add, button, gopenLibrary x%btn2_x% y0 w%btn_w% h%yHeight%, ⟳
+Gui, Main: Font, s24, Arial
+Gui, Main: add, button, gopenLibrary  x%btn1_x% y0 w%btn_w% h%yHeight%, ←
+Gui, Main: add, button, gopenLibrary x%btn2_x% y0 w%btn_w% h%yHeight%, ↷
 Gui, Main: Add, Text, center x%txt2_x% y0 w%txt2_w% h%yHeight%, Holmstad Library Catalog
 Gui, Main: add, button, gF1 x%btn3_x% y0 w%btn3_w% h%yHeight%, ? 
 Gui, Main: +LastFound +AlwaysOnTop -Border -SysMenu +Owner -Caption +ToolWindow
@@ -66,54 +62,48 @@ Gui, Main: Show, x%xPos% y%yPos%
 
 ; Create the popup menu by adding some items to it.
 Menu, MyMenu, Add, Help, MenuHandler
-Menu, MyMenu, Add, Search, MenuHandler
+;Menu, MyMenu, Add, Search, MenuHandler
 Menu, MyMenu, Add, About, MenuHandler
 
 ;SetTimer, CheckMouseHover, 200 ; Checks mouse position every 100 milliseconds
 
 return  ; End of script's auto-execute section.
 
+;CloseButton:
+;	Gui, menu: Destroy
+	
 MenuHandler:
 	;MsgBox You selected %A_ThisMenuItem% from the menu %A_ThisMenu%.
 	Gui, menu: Destroy
-	if (A_ThisMenuItem = "Help") {
-		MsgBox help
-		FileRead, html, menu.html
-		Gui, menu: Add, ActiveX, x0 y0 w400 h600 vWB, HTMLfile  
-		Gui, menu: +LastFound -Caption +AlwaysOnTop +ToolWindow -Border +Resize
-		wb.write(html)
-		gui, menu: Show, , Test
-		
+	;MsgBox %A_WorkingDir%
+	;Gui, menu: New, hwndhGui AlwaysOnTop Resize MinSize
+	Gui, menu: New, +Resize, %A_ThisMenuItem%
+
+	if (A_ThisMenuItem = "About") {
+		Gui, menu: New, +Resize, %A_ThisMenuItem%	; Create the GUI window
+		Gui, menu: Add, ActiveX, x0 y0 w600 h700 vWB1, Shell.Explorer
+		Gui, menu: Show, 
+
+		htmlPath := A_ScriptDir "/Docs/about.html"   	; Construct the full path to the HTML file
+		WB1.Navigate(htmlPath)
+		return
 	}
-	else if (A_ThisMenuItem = "About") {
-		;MsgBox about
-		file = Docs/kiosk.png
-		color = FFFFFF ; White
-		Gui, menu: Add, Picture, w800 h-1,  %file%  ; scale image
-		Gui, menu: Color, %color%
-		Gui, menu: +LastFound -Caption +AlwaysOnTop +ToolWindow -Border +Resize
-		Gui, menu: Show, Center AutoSize, Picture Scaler
-	} 
-	else if (A_ThisMenuItem = "xSearch") {
-		image = Docs/search.png
-		Gui -DPIScale
-		Gui Font, s15
-		Loop 2 {
-		 Gui Add, Pic , % "w882 " (A_Index = 1 ? "xm" : "x+m"), % image
-		 Gui Add, Text, wp yp BackgroundTrans, % "Picture #" A_Index
-		}
-		Gui Show
+	else if (A_ThisMenuItem = "Help") {
+		Gui, menu: New, +Resize, %A_ThisMenuItem%	; Create the GUI window
+		Gui, menu: Add, ActiveX, x0 y0 w600 h700 vWB1, Shell.Explorer
+		Gui, menu: Show, 
+
+		htmlPath := A_ScriptDir "/Docs/help.html"   	; Construct the full path to the HTML file
+		WB1.Navigate(htmlPath)
+		return
 	}
-	else if (A_ThisMenuItem = "Search") {	
-		;run, "C:\Program Files\Google\Chrome\Application\chrome.exe"   
-		run, "https://wiki.librarything.com/index.php/%22Your_books%22_Search"
-		
-	}
+	
+
 	
 	GuiClose:
 	Guiescape:
-	;Esc::Gui, menu: cancel
-	
+	Esc::Gui, menu: cancel
+
 guisize:
 	GuiControl, Move, mypic, % "w" . A_GuiWidth . " h" . A_GuiHeight
 	winset redraw
@@ -128,6 +118,9 @@ F2::
 		ToolTip
 	return
 */
+
+^r::Gosub, BrowserBackFunction
+;Esc::Gui, menu: Destroy ; end help
 F1::Menu, MyMenu, Show  ; show the menu.
 ^w::Gosub, GoodBy   	; Ctrl-w exit with password
 !F4::return   	 		;  Disables Alt+F4
@@ -136,23 +129,32 @@ F1::Menu, MyMenu, Show  ; show the menu.
 ^h::Gosub, openLibrary	; Ctrl-h  back to library
 ^x::Gosub, exitonly		; Ctrl-x exit
 
-#If !enable_mouse
-LButton::return
-#If
 
 
 
 openLibrary:
 	run https://www.librarything.com/catalog/HolmstadLibrary
+	;Sleep, 100
+	;send {f11}
+	;Sleep, 100
 	return
 
-refreshArror:
+refreshArror() {
 	run https://www.librarything.com/catalog/HolmstadLibrary
+	Sleep, 100
+	send {f11}
 	return
+}
 
-leftArror:
-	run https://www.librarything.com/catalog/HolmstadLibrary
-	return
+BrowserBackFunction:
+	Send, !{Left}
+	;Sendinput, !{Left}
+	;ControlFocus,, ahk_exe chrome.exe
+	;Sleep, 100
+	;ControlSend,, {!Left}, ahk_exe chrome.exe
+    Return
+
+
 	
 exitonly:
 	run taskkill /IM chrome.exe	
