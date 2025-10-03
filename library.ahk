@@ -52,17 +52,27 @@ txt2_w := xWidth - txt2_x - btn3_w
 Gui, Main: Margin, 0, 0
 Gui, Main: -DPIScale			; make display match pixels
 
+Gui, Main: Font, s16, Arial
+Gui, Main: add, button, gF2  x%btn1_x% y0 w%btn_w% h%yHeight%, File
 Gui, Main: Font, s24, Arial
-Gui, Main: add, button, gopenLibrary  x%btn1_x% y0 w%btn_w% h%yHeight%, ←
 Gui, Main: add, button, gopenLibrary x%btn2_x% y0 w%btn_w% h%yHeight%, ↷
 Gui, Main: Add, Text, center x%txt2_x% y0 w%txt2_w% h%yHeight%, Holmstad Library Catalog
 Gui, Main: add, button, gF1 x%btn3_x% y0 w%btn3_w% h%yHeight%, ? 
 Gui, Main: +LastFound +AlwaysOnTop -Border -SysMenu +Owner -Caption +ToolWindow
 Gui, Main: Show, x%xPos% y%yPos%
 
+HideTaskBar()	; hide taskbar 
+
+
+;; file/home menu list
+Menu, FileMenu, Add, Home, MenuHandler
+Menu, FileMenu, Add, Exit, MenuHandler
+Menu, FileMenu, Add, PowerOff, MenuHandler
+
+
+
 ; Create the popup menu by adding some items to it.
 Menu, MyMenu, Add, Help, MenuHandler
-;Menu, MyMenu, Add, Search, MenuHandler
 Menu, MyMenu, Add, About, MenuHandler
 
 ;SetTimer, CheckMouseHover, 200 ; Checks mouse position every 100 milliseconds
@@ -78,28 +88,39 @@ MenuHandler:
 	;MsgBox %A_WorkingDir%
 	;Gui, menu: New, hwndhGui AlwaysOnTop Resize MinSize
 	Gui, menu: New, +Resize, %A_ThisMenuItem%
+	if (A_ThisMenu = "MyMenu") {
+		if (A_ThisMenuItem = "About") {
+			Gui, menu: New, +Resize, %A_ThisMenuItem%	; Create the GUI window
+			Gui, menu: Add, ActiveX, x0 y0 w600 h700 vWB1, Shell.Explorer
+			Gui, menu: Show, 
 
-	if (A_ThisMenuItem = "About") {
-		Gui, menu: New, +Resize, %A_ThisMenuItem%	; Create the GUI window
-		Gui, menu: Add, ActiveX, x0 y0 w600 h700 vWB1, Shell.Explorer
-		Gui, menu: Show, 
+			htmlPath := A_ScriptDir "/Docs/about.html"   	; Construct the full path to the HTML file
+			WB1.Navigate(htmlPath)
+			return
+		}
+		else if (A_ThisMenuItem = "Help") {
+			Gui, menu: New, +Resize, %A_ThisMenuItem%	; Create the GUI window
+			Gui, menu: Add, ActiveX, x0 y0 w600 h700 vWB1, Shell.Explorer
+			Gui, menu: Show, 
 
-		htmlPath := A_ScriptDir "/Docs/about.html"   	; Construct the full path to the HTML file
-		WB1.Navigate(htmlPath)
-		return
+			htmlPath := A_ScriptDir "/Docs/help.html"   	; Construct the full path to the HTML file
+			WB1.Navigate(htmlPath)
+			return
+		}
+	} else {
+		if (A_ThisMenuItem = "Home") {
+			run https://www.librarything.com/catalog/HolmstadLibrary
+			Sleep, 100
+			send {f11}
+			return
+		}
+		else if (A_ThisMenuItem = "Exit") {
+			GoodBy(0)
+		}
+		else if (A_ThisMenuItem = "PowerOff") {
+			GoodBy(4+8)
+		}
 	}
-	else if (A_ThisMenuItem = "Help") {
-		Gui, menu: New, +Resize, %A_ThisMenuItem%	; Create the GUI window
-		Gui, menu: Add, ActiveX, x0 y0 w600 h700 vWB1, Shell.Explorer
-		Gui, menu: Show, 
-
-		htmlPath := A_ScriptDir "/Docs/help.html"   	; Construct the full path to the HTML file
-		WB1.Navigate(htmlPath)
-		return
-	}
-	
-
-	
 	GuiClose:
 	Guiescape:
 	Esc::Gui, menu: cancel
@@ -108,21 +129,13 @@ guisize:
 	GuiControl, Move, mypic, % "w" . A_GuiWidth . " h" . A_GuiHeight
 	winset redraw
 	return
-/*
-F2::
-    toggle := !toggle
-    If toggle
-		SetTimer, CheckMouseHover, 200 ; Checks mouse position every 100 milliseconds
-	else 
-		SetTimer, CheckMouseHover, Off
-		ToolTip
-	return
-*/
+
+F2::Menu, FileMenu, Show  ; show the menu.
 
 ^r::Gosub, BrowserBackFunction
 ;Esc::Gui, menu: Destroy ; end help
 F1::Menu, MyMenu, Show  ; show the menu.
-^w::Gosub, GoodBy   	; Ctrl-w exit with password
+^w::GoodBy(0)   	; Ctrl-w exit with password
 !F4::return   	 		;  Disables Alt+F4
 ^!tab::return 	 		;  Disables Ctrl-Alt-Tab
 !tab::return  	 		;  Disables Alt-Tab
@@ -154,8 +167,6 @@ BrowserBackFunction:
 	;ControlSend,, {!Left}, ahk_exe chrome.exe
     Return
 
-
-	
 exitonly:
 	run taskkill /IM chrome.exe	
 	exitApp
@@ -183,19 +194,44 @@ CheckMouseHover:
 	ToolTip,  mx:%mouseX% `nmy:%mouseY% `n%A_Cursor% `n%enable_mouse% `n%Color%  `n%OutputVar%
 Return	
 */
-	
 
-GoodBy:
+
+; AutoHotkey script to toggle Windows Taskbar visibility
+HideTaskBar(){  ;toggle hide/show
+    DetectHiddenWindows, On
+    WinGet, TaskbarID, ID, ahk_class Shell_TrayWnd
+    if WinExist("ahk_id " . TaskbarID)
+    {
+        WinGet, Style, Style, ahk_id %TaskbarID%
+        if (Style & 0x10000000) ; WS_VISIBLE flag
+        {
+            WinHide, ahk_id %TaskbarID%
+        }
+        else
+        {
+            WinShow, ahk_id %TaskbarID%
+        }
+    }
+	return
+}
+
+GoodBy(sd){
+	/* param value
+    0 = Logoff
+    1 = Shutdown
+    2 = Reboot
+    4 = Force
+    8 = Power down
+	*/
 	InputBox, password, Enter your Password,, HIDE,, 100
-
+	;MsgBox %sd%
 	Loop, {
 		if (errorlevel = 1)
 			return
-
 		if (password = "700holm") {
 			;MsgBox, The password is correct.
 			run taskkill /IM chrome.exe
-			shutdown, 0
+			shutdown, sd
 			;exitApp
 		} else if (password != "700holm") {
 			MsgBox, The password is incorrect.
@@ -203,7 +239,7 @@ GoodBy:
 			return
 		}
 	}
-	
+}
 	
 ; https://www.autohotkey.com/board/topic/44536-calling-functions-from-the-hotkey-command/
 
