@@ -1,5 +1,6 @@
 **Library Kiosk Instructions**
 Library catalog for Holmstad residents
+Source code at:  https://github.com/wfzirk/Holmstad-Library-Kiosk
 
 # Installation
 - Download and install Autohokey version 1 https://www.autohotkey.com/
