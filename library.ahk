@@ -53,9 +53,11 @@ Gui, Main: Margin, 0, 0
 Gui, Main: -DPIScale			; make display match pixels
 
 Gui, Main: Font, s16, Arial
-Gui, Main: add, button, gF2  x%btn1_x% y0 w%btn_w% h%yHeight%, File
+Gui, Main: add, picture, gopenLibrary x%btn1_x% y0 w%btn_w% h%yHeight%, house1.png
+Gui, Main: add, button, gF2  x%btn2_x% y0 w%btn_w% h%yHeight% , File
 Gui, Main: Font, s24, Arial
-Gui, Main: add, button, gopenLibrary x%btn2_x% y0 w%btn_w% h%yHeight%, ↷
+;G;gui, Main: add, button, gopenLibrary x%btn2_x% y0 w%btn_w% h%yHeight%, ↷
+;Gui, Main: add, picture, gopenLibrary x%btn2_x% y0 w%btn_w% h%yHeight%, house.png
 Gui, Main: Add, Text, center x%txt2_x% y0 w%txt2_w% h%yHeight%, Holmstad Library Catalog
 Gui, Main: add, button, gF1 x%btn3_x% y0 w%btn3_w% h%yHeight%, ? 
 Gui, Main: +LastFound +AlwaysOnTop -Border -SysMenu +Owner -Caption +ToolWindow
@@ -111,7 +113,8 @@ MenuHandler:
 		if (A_ThisMenuItem = "Home") {
 			run https://www.librarything.com/catalog/HolmstadLibrary
 			Sleep, 100
-			send {f11}
+			;send {f11}
+			HideTaskBar()
 			return
 		}
 		else if (A_ThisMenuItem = "Exit") {
@@ -132,14 +135,15 @@ guisize:
 
 F2::Menu, FileMenu, Show  ; show the menu.
 
-^r::Gosub, BrowserBackFunction
 ;Esc::Gui, menu: Destroy ; end help
+;^h::Gosub, openLibrary	; Ctrl-h  back to library
+
 F1::Menu, MyMenu, Show  ; show the menu.
+^r::Gosub, BrowserBackFunction
 ^w::GoodBy(0)   	; Ctrl-w exit with password
 !F4::return   	 		;  Disables Alt+F4
 ^!tab::return 	 		;  Disables Ctrl-Alt-Tab
 !tab::return  	 		;  Disables Alt-Tab
-^h::Gosub, openLibrary	; Ctrl-h  back to library
 ^x::Gosub, exitonly		; Ctrl-x exit
 
 
@@ -151,13 +155,15 @@ openLibrary:
 	;send {f11}
 	;Sleep, 100
 	return
-
-refreshArror() {
+	
+/*
+refreshArrow() {
 	run https://www.librarything.com/catalog/HolmstadLibrary
 	Sleep, 100
 	send {f11}
 	return
 }
+*/ 
 
 BrowserBackFunction:
 	Send, !{Left}
@@ -168,6 +174,7 @@ BrowserBackFunction:
     Return
 
 exitonly:
+	ShowTaskBar()
 	run taskkill /IM chrome.exe	
 	exitApp
 
@@ -197,7 +204,21 @@ Return
 
 
 ; AutoHotkey script to toggle Windows Taskbar visibility
-HideTaskBar(){  ;toggle hide/show
+
+ShowTaskBar() {
+	DetectHiddenWindows, On
+    WinGet, TaskbarID, ID, ahk_class Shell_TrayWnd
+	WinShow, ahk_id %TaskbarID%
+}
+
+HideTaskBar() {
+	DetectHiddenWindows, On
+    WinGet, TaskbarID, ID, ahk_class Shell_TrayWnd
+	WinHide, ahk_id %TaskbarID%
+}
+
+/*
+ToggleTaskBar(){  ;toggle hide/show
     DetectHiddenWindows, On
     WinGet, TaskbarID, ID, ahk_class Shell_TrayWnd
     if WinExist("ahk_id " . TaskbarID)
@@ -214,6 +235,7 @@ HideTaskBar(){  ;toggle hide/show
     }
 	return
 }
+*/
 
 GoodBy(sd){
 	/* param value
@@ -230,6 +252,7 @@ GoodBy(sd){
 			return
 		if (password = "700holm") {
 			;MsgBox, The password is correct.
+			ShowTaskBar()
 			run taskkill /IM chrome.exe
 			shutdown, sd
 			;exitApp
