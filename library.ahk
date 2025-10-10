@@ -109,6 +109,7 @@ MenuHandler:
 			WB1.Navigate(htmlPath)
 			return
 		}
+		
 	} else {
 		if (A_ThisMenuItem = "Home") {
 			run https://www.librarything.com/catalog/HolmstadLibrary
@@ -145,6 +146,7 @@ F1::Menu, MyMenu, Show  ; show the menu.
 ^!tab::return 	 		;  Disables Ctrl-Alt-Tab
 !tab::return  	 		;  Disables Alt-Tab
 ^x::Gosub, exitonly		; Ctrl-x exit
+LWin::Return		;disable win button
 
 
 

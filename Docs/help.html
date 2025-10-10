@@ -6,57 +6,109 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Kiosk Help</title>
 		<style>
-			body {background: lightyellow;}
+			
+			body {
+			font-size: 16px;
+			background: white;  /* lightyellow;*/
+			width: 100%;  /* 750px;  */
+			}
+			
+			.kioskimg {
+			width: 100%;
+			}
+			
 			.container {
-				width:100%;
-				overflow:auto;
-				/*overflow: scroll;*/
-				xbackground: lightyellow;
+			width:100%;
+			/*width: 650px;*/
+			overflow:auto;
+			/*overflow: scroll;*/
+			xbackground: lightyellow;
 			}
 			.container div {
-				width:48%;
-				float:left;
-				padding: 5px;
-				xbackground: lightyellow;
+			width:45%; 
+			/*width: 350px;*/
+			float:left;
+			padding: 5px;
+			xbackground: lightyellow;
 			}
 		</style>
 	</head>
-	
 	<body>
-		
 		<h2> Holmstad Library Kiosk Instructions</h2>
 		<p>This tool allows one to search the Holmstad library by various methods.
 		</p>
+		<div class="container">
+			<div>
+				<img  src="./powerbutton.jpg">
+			</div>
+			<div>
+				<h3>Power Button</h3>
+				<p>The power button is on the left side.  If the button is <span style="background: yellow"><b>yellow</b></span> the power is off.  If it is on, then the power button is <span style="background: lightblue"><b>blue</b></span> and a mouse movement or striking a key on the keyboard should wake up the PC.
+				</p>		
+				<p>* The PC is slow so patience is required to wait for the PC to complete powering up.</p>
+			</div>
+		</div>
+		<hr>
+		<div class="container">
+			<div>
+				<img class="kioskimg" src="./logon.jpg">
+			</div>
+			<div>
+				<h3>Logging On</h3>
+				<p>After The PC is powered on you will be shown a logon screen.  Select the icon labeled Kiosk.
+				</p>		
+			</div>
+		</div>
+		<hr>
+		<h3>Kiosk Screen</h3>
+		<div>
+			<img width="100%" src="./kiosk.jpg">
+		</div>
+		<div>
+			<!--<h3>Kiosk Screen</h3>-->
+			<p>You will be presented with the "LibraryThing" web site.
+				<span>The Home button <img width="50px" src="house1.png"> will take you back to this screen at any time.</span>
+			</p>
+			<ul>
+			<li>Clicking on "File" button will give you options to return to this screen, Exit or Power off. 
+			</li><li>		
+			<p>Holding down he alt key and pressing the left arrow button take you to the previous screen. 
+			</p>
+			<p>The "?" button will present this help.
+			</p>
+			<p>Other options are explained below.
+			</p>
+		</div>
+		<hr>
+		
 		<h3>Search Overview</h3>
-				<p>Type your search word in the search box (labeled "Search this library") to find books quickly.
-				</p>
+		<p>Type your search word(s), (for example author name or title) in the search box (labeled "Search this library") on the top right of the screen.  Then use the mouse to click on the word "Search".  Our books written by that author will will be listed, or if we have that title it will be listed.
+		</p>
 		<h3>Sorting</h3>
 		<div>
 			<p>Click on any column heading to sort on that column.  Clicking again on the column will reverse the sort.
 			</p>
 			<ul>
-			<li>Clicking on the column title will give information about that item 
-			</li>
-			<li>Clicking on an authors name will give information about the author.  
-			</li>
-			<li>
-			Clicking on a tag from the tag field will show all books referenced by the tag.				
-			</li>
+				<li>Clicking on any item in a column will give information about that item 
+				</li>
+				<li>Clicking on an authors name will give information about the author.  
+				</li>
+				<li>Clicking on a book title will give more information about the book.				
+				</li>
 			</ul>
 		</div>
 		<hr>
 		<div class="container">
 			<div>
-				<img  src="./collections.jpg">
+				<img class="xkioskimg"  src="./collections.jpg">
 			</div>
-			
 			<div>
 				<h3>Collections</h3>
 				<p>A Search can be made on all books or categorized by "Fiction" or "non-Fiction".  Use the All collections pull down to search the entire collection.
 				</p>		
 			</div>
 		</div>
-		<br><hr>
+		<hr>
 		<div class="container">
 			<div>
 				<h3>Search Overview</h3>
@@ -65,7 +117,7 @@
 				</ul>			
 			</div>	
 			<div>
-				<img  src="search.jpg" "width=100px">
+				<img class="kioskimg"  src="search.jpg" "width=100px">
 			</div>
 		</div>
 		
