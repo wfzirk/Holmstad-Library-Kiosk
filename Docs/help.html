@@ -9,8 +9,8 @@
 			
 			body {
 			font-size: 16px;
-			background: white;  /* lightyellow;*/
-			width: 100%;  /* 750px;  */
+			background-color: lightyellow;
+			width: 100%; 
 			}
 			
 			.kioskimg {
@@ -19,18 +19,24 @@
 			
 			.container {
 			width:100%;
-			/*width: 650px;*/
 			overflow:auto;
-			/*overflow: scroll;*/
-			xbackground: lightyellow;
 			}
 			.container div {
 			width:45%; 
-			/*width: 350px;*/
 			float:left;
 			padding: 5px;
-			xbackground: lightyellow;
 			}
+			
+			.red {
+				color: red;
+				font-weight: bold;
+			}
+			/*@media print {
+				body {
+					background-color:white; 
+				}
+			}*/
+			
 		</style>
 	</head>
 	<body>
@@ -43,9 +49,16 @@
 			</div>
 			<div>
 				<h3>Power Button</h3>
-				<p>The power button is on the left side.  If the button is <span style="background: yellow"><b>yellow</b></span> the power is off.  If it is on, then the power button is <span style="background: lightblue"><b>blue</b></span> and a mouse movement or striking a key on the keyboard should wake up the PC.
-				</p>		
-				<p>* The PC is slow so patience is required to wait for the PC to complete powering up.</p>
+					<p>The Power Button is on the left side.
+					</p>
+					<p>If it is not lit the computer is powered off.
+					</p> 
+					<p>If the button is <span style="background: orange"><b>amber</b></span> the computer is in a standby or sleep state.  Moving the mouse or pushing a keyboard button should wake up the PC.
+					</p>
+					<p>If the button is <span style="background: lightblue"><b>blue</b></span> The computer is powered on and functioning normally.
+					</p>
+					<p>* The PC is slow so patience is required to wait for the PC to complete powering up.
+					</p>
 			</div>
 		</div>
 		<hr>
@@ -62,19 +75,19 @@
 		<hr>
 		<h3>Kiosk Screen</h3>
 		<div>
-			<img width="100%" src="./kiosk.jpg">
+			<img width="100%" src="./kiosk.png">
 		</div>
 		<div>
 			<!--<h3>Kiosk Screen</h3>-->
 			<p>You will be presented with the "LibraryThing" web site.
-				<span>The Home button <img width="50px" src="house1.png"> will take you back to this screen at any time.</span>
+				<span>The Home button <span class="red">(1)</span> <img width="50px" src="house1.png"> will take you back to this screen at any time.</span>
 			</p>
 			<ul>
-			<li>Clicking on "File" button will give you options to return to this screen, Exit or Power off. 
+			<li>Clicking on "File" button <span class="red">(1)</span> will give you options to return to this screen, Exit or Power off. 
 			</li><li>		
-			<p>Holding down he alt key and pressing the left arrow button take you to the previous screen. 
+			<p>Holding down the alt key and pressing the left arrow button take you to the previous screen. 
 			</p>
-			<p>The "?" button will present this help.
+			<p>The "?" button <span class="red">(2)</span> will present this help document.
 			</p>
 			<p>Other options are explained below.
 			</p>
@@ -82,15 +95,15 @@
 		<hr>
 		
 		<h3>Search Overview</h3>
-		<p>Type your search word(s), (for example author name or title) in the search box (labeled "Search this library") on the top right of the screen.  Then use the mouse to click on the word "Search".  Our books written by that author will will be listed, or if we have that title it will be listed.
+		<p>Type your search word(s), (for example author name or title) in the search box <span class="red">(4)</span> (labeled "Search this library") on the top right of the screen.  Then use the mouse to click on the word "Search" <span class="red">(4)</span>.  Our books written by that author will will be listed, or if we have that title it will be listed.
 		</p>
 		<h3>Sorting</h3>
 		<div>
-			<p>Click on any column heading to sort on that column.  Clicking again on the column will reverse the sort.
+			<p>Click on any column heading <span class="red">(6)</span> to sort on that column.  Clicking again on the column will reverse the sort.
 			</p>
-			<ul>
-				<li>Clicking on any item in a column will give information about that item 
-				</li>
+			
+			<p>Clicking on any item <span class="red">(7)</span> in a column will give more information about that item.</p>
+			<ul>	
 				<li>Clicking on an authors name will give information about the author.  
 				</li>
 				<li>Clicking on a book title will give more information about the book.				
@@ -104,7 +117,7 @@
 			</div>
 			<div>
 				<h3>Collections</h3>
-				<p>A Search can be made on all books or categorized by "Fiction" or "non-Fiction".  Use the All collections pull down to search the entire collection.
+				<p>A Search can be made of all books, only "Fiction" or only "non-Fiction".  Use the All collections pull down <span class="red">(3)</span> to search the entire collection.
 				</p>		
 			</div>
 		</div>
@@ -112,8 +125,8 @@
 		<div class="container">
 			<div>
 				<h3>Search Overview</h3>
-				<ul><li> Use the search box (labeled "Search your library") to find books quickly. Use the dropdown to limit your search to specific fields.</li>
-					<li> The "Advanced search" and "Search tips options will give instruction on how to do better searches.</li>
+				<ul><li> Use the search box <span class="red">(4)</span> (labeled "Search this library") to find books quickly. Use the search dropdown <span class="red">(5)</span> to limit your search to specific fields.</li>
+					<li> The "Advanced search" and "Search tips options will give instruction on how to do more in-depth searches.</li>
 				</ul>			
 			</div>	
 			<div>
